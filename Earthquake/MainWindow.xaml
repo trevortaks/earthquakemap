@@ -4,9 +4,15 @@
         Title="EarthQuake Map" Height="550" Width="820" ResizeMode="NoResize">
     
     
-    <Grid>
-        <Image x:Name="imgMap" Height="360" Margin="50,80,0,0" VerticalAlignment="Top" Source="C:\Users\Trevor Takawira\documents\visual studio 2012\Projects\Earthquake\Earthquake\pic\map4.png" HorizontalAlignment="Left" Width="720"/>
-        <Canvas Name="canvas" Margin="50,80,0,0" HorizontalAlignment="Left" Width="720" Height="360" VerticalAlignment="Top"/>
+    <Grid >
+        <Grid.Background>
+            <RadialGradientBrush>
+                <GradientStop Offset="0" Color="Gray"></GradientStop>
+                <GradientStop Offset="1" Color="#333"></GradientStop>
+            </RadialGradientBrush>
+        </Grid.Background>
+        <Image x:Name="imgMap" Height="360" Width="720" Margin="50,80,0,0"  VerticalAlignment="Top"  Source="C:\Users\Trevor Takawira\documents\visual studio 2012\Projects\Earthquake\Earthquake\pic\map4.png" HorizontalAlignment="Left" />
+        <Canvas Name="canvas" Margin="50,80,0,0" HorizontalAlignment="Left" Width="720" Height="360" VerticalAlignment="Top" />
         <DatePicker Name="dpStart" HorizontalAlignment="Left" Margin="95,19,0,0" VerticalAlignment="Top"/>
         <Label Content="Start Date" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.003,0.03" Width="70"/>
         <Label Content="End Date&#xD;&#xA;" HorizontalAlignment="Left" Margin="221,18,0,0" VerticalAlignment="Top" Width="69" Height="27"/>

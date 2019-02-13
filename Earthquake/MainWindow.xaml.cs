@@ -35,9 +35,32 @@ namespace QuakeData
         public MainWindow()
         {
             InitializeComponent();
+            initialiseFields();
             initialiseData(baseurl);
         }
 
+        /*
+         *  Function to set default values for the DateTime fields
+         *  Takes no arguments
+         */
+        public void initialiseFields(){
+            dpStart.SelectedDate = DateTime.Now;
+            dpEnd.SelectedDate = DateTime.Now;
+
+            dpStart.DisplayDateEnd = DateTime.Now;
+            dpEnd.DisplayDateEnd = DateTime.Now;
+
+        }
+
+        /*
+         * Initialise Data accesses the USGS api to retrieve json based on parameters given
+         * it then uses NewtonSoft.Json to deserialize the JSON into objects instantiated
+         * from classes in EarthQuake.cs with root being the parent
+         * The coordinates of the earthquake are then loaded into a dictionary along with an ellipse
+         * that will be used to draw the coordinate on the map
+         * 
+         * Arg 1 : url - a concateneated url pointing to the USGS api 
+         */
         public void initialiseData(string url) {
             Dictionary<System.Windows.Point, Ellipse> points = new Dictionary<System.Windows.Point, Ellipse>();
 
@@ -57,6 +80,12 @@ namespace QuakeData
                 Draw(points);
             }
         }
+
+        /*
+         * getQuake() retrieves individual earthquake data lists from the parsed json and loads it into a dictionary 
+         * No Args
+         * Returns a dictionary containing (coordinate, ellipse) pairs
+         */
 
         public Dictionary<System.Windows.Point, Ellipse> getQuake()
         {
@@ -91,6 +120,11 @@ namespace QuakeData
             return points;
         }
 
+        /*
+         * getData accesses the USGS api url and downloads the data into a string
+         * it returns a RootObject 
+         */
+
         public RootObject getData(string urll) {
             RootObject rot = new RootObject();
 
@@ -103,6 +137,12 @@ namespace QuakeData
 
             return rot;
         }
+
+        /*
+         * Rsponsible for mapping world coordinates into pixels that will be drawn over the map image
+         * Arg 1: List containing latitude , longitude and depth
+         * returns Point describing relative pixels
+         */
 
         private System.Windows.Point ToMercator(List<double> coordinates)
         {
@@ -123,6 +163,11 @@ namespace QuakeData
             return mercator;
         }
 
+        /*
+         * Draw draws the ellipses onto a cnvas mapped over the image using rhe point determined
+         * by ToMercator
+         * Arg1 : quakeList- Dictionary containing (pixel, ellipse) pairs
+         */
         private void Draw(Dictionary<System.Windows.Point, Ellipse> quakeList) {
             //Ellipse ellipse = new Ellipse();
             //ellipse.Fill = Brushes.Green;
@@ -156,12 +201,12 @@ namespace QuakeData
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            DateTime start =(DateTime) dpStart.SelectedDate;
+            DateTime start =(DateTime)dpStart.SelectedDate;
             DateTime end = (DateTime)dpEnd.SelectedDate;
             string magnitude =(String) cbMagnitude.Text;
 
-            string full_url = url + "startime=" + start.ToShortDateString() 
-                + "&endtime=" + end.ToShortDateString()
+            string full_url = url + "startime=" + start.ToString("yyyy-MM-dd") 
+                + "&endtime=" + end.ToString("yyyy-MM-dd")
                 + "&minmagnitude=" + magnitude;
 
             lblStatus.Content = full_url;
@@ -173,3 +218,12 @@ namespace QuakeData
 
     }
 }
+
+/*
+ * Future Work
+ * -Move most functionality out of code behind file
+ * -Add animations
+ * -Make map more interactive
+ * -Add more customisations
+ * 
+ */
