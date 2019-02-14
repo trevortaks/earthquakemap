@@ -11,7 +11,7 @@
                 <GradientStop Offset="1" Color="#333"></GradientStop>
             </RadialGradientBrush>
         </Grid.Background>
-        <Image x:Name="imgMap" Height="360" Width="720" Margin="50,80,0,0"  VerticalAlignment="Top"  Source="C:\Users\Trevor Takawira\documents\visual studio 2012\Projects\Earthquake\Earthquake\pic\map4.png" HorizontalAlignment="Left" />
+        <Image x:Name="imgMap" Height="360" Width="720" Margin="50,80,0,0"  VerticalAlignment="Top"  Source="/pic/map4.png" HorizontalAlignment="Left" />
         <Canvas Name="canvas" Margin="50,80,0,0" HorizontalAlignment="Left" Width="720" Height="360" VerticalAlignment="Top" />
         <DatePicker Name="dpStart" HorizontalAlignment="Left" Margin="95,19,0,0" VerticalAlignment="Top"/>
         <Label Content="Start Date" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.003,0.03" Width="70"/>
