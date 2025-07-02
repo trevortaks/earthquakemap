@@ -12,8 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Web;
-using System.Net;
+using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using EarthQuake;
@@ -116,9 +115,9 @@ namespace QuakeData
         {
             RootObject rot = new RootObject();
 
-            using (WebClient wc = new WebClient())
+            using (HttpClient client = new HttpClient())
             {
-                var json = wc.DownloadString(url);
+                var json = client.GetStringAsync(url).Result;
 
                 rot = JsonConvert.DeserializeObject<RootObject>(json,
                     new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
