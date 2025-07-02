@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using EarthQuake;
 using System.Windows.Media.Animation;
 using System.IO;
@@ -32,12 +26,13 @@ namespace QuakeData
         string exampleurl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-02-13&endtime=2019-02-14&minmagnitude=1";
         string url = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&";
         RootObject root;
+        private static readonly HttpClient httpClient = new HttpClient();
 
         public MainWindow()
         {
             InitializeComponent();
             initialiseFields();
-            initialiseData();
+            _ = InitialiseDataAsync();
         }
 
         /*
@@ -62,15 +57,15 @@ namespace QuakeData
          * 
          * Arg 1 : url - a concateneated url pointing to the USGS api 
          */
-        public void initialiseData()
+        public async Task InitialiseDataAsync()
         {
             Dictionary<System.Windows.Point, Ellipse> points = new Dictionary<System.Windows.Point, Ellipse>();
 
             try
             {
-                root = getData(urlBuilder());
+                root = await GetDataAsync(urlBuilder());
             }
-            catch (System.Net.WebException e)
+            catch (HttpRequestException e)
             {
                 string json= "";
                 lblStatus.Content = e.Message;
@@ -107,23 +102,17 @@ namespace QuakeData
         }
 
         /*
-         * getData accesses the USGS api url and downloads the data into a string
-         * it returns a RootObject 
+         * GetDataAsync accesses the USGS api url and downloads the data asynchronously
+         * It returns a RootObject
          */
 
-        public RootObject getData(string url)
+        public async Task<RootObject> GetDataAsync(string url)
         {
-            RootObject rot = new RootObject();
+            var json = await httpClient.GetStringAsync(url);
 
-            using (HttpClient client = new HttpClient())
-            {
-                var json = client.GetStringAsync(url).Result;
-
-                rot = JsonConvert.DeserializeObject<RootObject>(json,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
-                    );
-
-            }
+            var rot = JsonConvert.DeserializeObject<RootObject>(json,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+                );
 
             return rot;
         }
@@ -292,9 +281,9 @@ namespace QuakeData
             MessageBox.Show(root.features[0].properties.place);
         }
 
-        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        private async void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            initialiseData();
+            await InitialiseDataAsync();
 
         }
         
